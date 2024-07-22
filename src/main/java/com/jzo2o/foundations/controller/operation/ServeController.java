@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -33,53 +34,72 @@ import java.util.List;
  * @since 2023-07-03
  */
 @Validated
-@RestController("operationRegionController")
-@RequestMapping("/operation/region")
-@Api(tags = "运营端 - 区域相关接口")
+
+@RestController("operationServeController")
+@RequestMapping("/operation/serve")
+@Api(tags = "运营端 - 区域服务相关接口")
 public class ServeController {
-//    @Resource
+    //    @Resource
 //    private IRegionService regionService;
     @Resource
     private IServeService iServeService;
-//
+
+    //
 //    @GetMapping("/activeRegionList")
 //    @ApiOperation("已开通服务区域列表")
 //    public List<RegionSimpleResDTO> activeRegionList() {
 //        return regionService.queryActiveRegionList();
 //    }
 //
-@PostMapping("/batch")
-@ApiOperation("区域服务批量新增")
-public void add(@RequestBody List<ServeUpsertReqDTO> serveUpsertReqDTOList) {
-    iServeService.batchAdd(serveUpsertReqDTOList);
-}
-//
-//    @PutMapping("/{id}")
-//    @ApiOperation("区域修改")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "区域id", required = true, dataTypeClass = Long.class),
-//            @ApiImplicitParam(name = "managerName", value = "负责人名称", required = true, dataTypeClass = String.class),
-//            @ApiImplicitParam(name = "managerPhone", value = "负责人电话", required = true, dataTypeClass = String.class)
-//    })
-//    public void update(@NotNull(message = "id不能为空") @PathVariable("id") Long id,
-//                       @RequestParam("managerName") String managerName,
-//                       @RequestParam("managerPhone") String managerPhone) {
-//        regionService.update(id, managerName, managerPhone);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    @ApiOperation("区域删除")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "区域id", required = true, dataTypeClass = Long.class)
-//    })
-//    public void delete(@NotNull(message = "id不能为空") @PathVariable("id") Long id) {
-//        regionService.deleteById(id);
-//    }
-//
+    @PostMapping("/batch")
+    @ApiOperation("区域服务批量新增")
+    public void add(@RequestBody List<ServeUpsertReqDTO> serveUpsertReqDTOList) {
+        iServeService.batchAdd(serveUpsertReqDTOList);
+    }
+
+    @PutMapping("/{id}")
+    @ApiOperation("区域服务价格修改")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "服务id", required = true, dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "price", value = "价格", required = true, dataTypeClass = BigDecimal.class)
+    })
+    public void update(@PathVariable("id") Long id,
+                       @RequestParam("price") BigDecimal price) {
+        iServeService.update(id, price);
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation("区域服务删除")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "服务id", required = true, dataTypeClass = Long.class)
+    })
+    public void delete(@NotNull(message = "id不能为空") @PathVariable("id") Long id) {
+        iServeService.deleteById(id);
+    }
+
+
     @GetMapping("/page")
     @ApiOperation("区域分页查询")
     public PageResult<ServeResDTO> page(ServePageQueryReqDTO servePageQueryReqDTO) {
         return iServeService.page(servePageQueryReqDTO);
+    }
+
+    @PutMapping("/onSale/{id}")
+    @ApiOperation("区域服务上架")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "服务id", required = true, dataTypeClass = Long.class),
+    })
+    public void onSale(@PathVariable("id") Long id) {
+        iServeService.onSale(id);
+    }
+
+    @PutMapping("/offSale/{id}")
+    @ApiOperation("区域服务下架")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "服务id", required = true, dataTypeClass = Long.class),
+    })
+    public void offSale(@PathVariable("id") Long id) {
+        iServeService.offSale(id);
     }
 //
 //    @GetMapping("/{id}")
